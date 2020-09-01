@@ -1,0 +1,26 @@
+Kong Siteminder Auth
+Copyright 2020 Optum
+
+Project Description:
+====================
+
+The Kong Siteminder Auth is a small, lua-based, OpenResty Nginx module which validates the Siteminder tokens passed in Kong's proxy requests. The purpose of this plugin is to call the Siteminder URL and validate if the token is valid.
+
+
+Authors:
+Jeremy Justus, ©Optum 2020
+Vinodhini Gopal, ©Optum 2020
+
+Added Files:
+============
+
+
+
+
+
+
+
+Modified Files:
+===============
+schema.lua
+handler.lua
