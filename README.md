@@ -17,7 +17,7 @@ $ curl -X POST http://kong:8001/apis/{api}/plugins \
 
 The ```config.authenticated_group``` helps set the context of the group defined on the tx for native Kong ACL plugin integration so you have the capability to run this auth pattern alongside other Kong auth patterns.
 
-You will also need to configure these fresh shm cache dicts in your Kong template for this plugin to leverage:
+You will also need to configure these shm cache dicts in your Kong template for this plugin to leverage:
 ```
 # exclusive siteminder shm caches
 lua_shared_dict kong_sm_cache       5m;
