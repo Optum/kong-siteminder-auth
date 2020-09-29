@@ -14,7 +14,7 @@ local KongSiteminder = {}
 
 
 KongSiteminder.PRIORITY = 998
-KongSiteminder.VERSION = "1.0.0"
+KongSiteminder.VERSION = "2.0.0"
 
 local parsed_urls_cache = {}
 
@@ -141,6 +141,12 @@ end
 
 function KongSiteminder:access(conf)
 
+  -- Check if multi auth, and kong cnsumer(other than anonymous consumer) is authenticated. If so skip this plugin.
+  local consumer = kong.client.get_consumer()
+  if conf.authenticated_group and consumer and consumer.username ~= "anonymous" then
+    return
+  end
+
   local cookie, err = ck:new()
   if not cookie then
       ngx.log(ngx.ERR, err)
@@ -161,9 +167,9 @@ function KongSiteminder:access(conf)
    kong.log.err(err)
    return kong.response.exit(401, { message = err })
   elseif err and conf.authenticated_group then -- Multi-auth and this plugin failed to auth so break out of plugin allow acl to fail it.
-   return  
+   return
   end
-  
+
   --Success, add support for multi-auth, plays nice with programmatic auth and acl plugin, success case
   if xml then
     if conf.authenticated_group == "by_route_id" then -- Multi-auth set "group" to route_id, Optum Standard
@@ -171,14 +177,14 @@ function KongSiteminder:access(conf)
     elseif conf.authenticated_group then -- Multi-auth set "group" to whatever custom group desired, users choice
       kong.ctx.shared.authenticated_groups = { conf.authenticated_group }
     end -- Potentially todo could be by_service_id if people use that as a pattern of auth?
-  
+
     local openingTagToFind = "<value>"
     local closingTagToFind = "</value>"
     local userid = xml:sub(xml:find(openingTagToFind) + #openingTagToFind, xml:find(closingTagToFind) - 1)
 
     -- Authenticate the consumer
     ngx.ctx.authenticated_consumer = {}
-    ngx.ctx.authenticated_consumer["username"] = userid  
+    ngx.ctx.authenticated_consumer["username"] = userid
 
     return kong.service.request.set_header("X-Userinfo", xml)
   end
