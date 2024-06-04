@@ -1,3 +1,10 @@
+# NOTICE
+
+6/4/2024
+
+We are archiving this plugin as we will not be maintaining this further. Siteminder is no longer used with our Kong instances. Feel free to fork and modify as needed! 
+
+
 # Kong Siteminder Auth
 Siteminder authentication integration with the Kong Gateway
 
